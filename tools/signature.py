@@ -34,8 +34,8 @@ def get_checkin_signature(date, config):
     return get_signature("checkin", datestr)
 
 
-if __name__ == '__main__':
-    from config import configs
-    logging.basicConfig(level=logging.DEBUG)
-    config = configs["xwytest"]
-    logging.info(get_current_open_signature("Sat, 16 Sep 2017 06:17:49 GMT+00:00", config))
+# if __name__ == '__main__':
+#     from config import configs
+#     logging.basicConfig(level=logging.DEBUG)
+#     config = configs["xwytest"]
+#     logging.info(get_current_open_signature("Sat, 16 Sep 2017 06:17:49 GMT+00:00", config))

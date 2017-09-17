@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 
 from config import configs
 from tools import get_checkin_signature, get_current_open_signature
+from tools import timer
 
 
 
@@ -25,9 +26,14 @@ class Checkin:
         self._logger = logging.Logger(__name__)
         console_hander = logging.StreamHandler()
         console_hander.setFormatter(logging.Formatter("%(asctime)s %(levelname)s:%(message)s"))
-        console_hander.setLevel(self._config.LOGGING_LEVEL)
+        console_hander.setLevel(logging.DEBUG)
         console_hander.addFilter(logging.Filter(__name__))
         self._logger.addHandler(console_hander)
+
+        file_hander = logging.FileHandler(filename=self._config.LOGGING_PATH, mode='a', encoding='utf-8')
+        file_hander.setFormatter(logging.Formatter("%(asctime)s %(levelname)s:%(message)s"))
+        file_hander.setLevel(logging.INFO)
+        self._logger.addHandler(file_hander)
 
     def checkin(self, checkin_id):
         self._logger.info('开始签到')
@@ -111,10 +117,14 @@ class Checkin:
         self._logger.info("开始监听签到")
         while True:
             sleep(randint(*self._config.INTERVAL))
-            checkin_id = self.get_checkin_id()
-            if checkin_id != -1:
-                self.checkin(checkin_id)
-                return
+            if timer(1, (8*60+8, 9*60+50)):
+                checkin_id = self.get_checkin_id()
+                if checkin_id != -1:
+                    self.checkin(checkin_id)
+                    return
+            else:
+                self._logger.debug("未在监听时段")
+
 
 
 if __name__ == '__main__':
