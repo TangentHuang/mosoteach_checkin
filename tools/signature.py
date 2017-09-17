@@ -6,11 +6,15 @@ import logging
 
 
 def get_signature(type, datestr):
-    cmd = r'java -cp "{}" com.Ak {} {}'.format(os.path.join(os.getcwd(), 'java_code'), type, datestr)
+    cmd = r'java -cp {} com.Ak {} {}'.format('java_code', type, datestr)
     logging.debug(cmd)
 
     rst = subprocess.Popen(cmd, stdout=subprocess.PIPE, shell=True)
-    return rst.communicate()[0][:-2].decode('ASCII')
+    rst = rst.communicate()[0].decode('ASCII')
+    if os.linesep == '\n':                      # linux
+        return rst[:-1]
+    else:                                       # windows
+        return rst[:-2]
 
 
 def get_current_open_signature(date, config):
@@ -30,8 +34,8 @@ def get_checkin_signature(date, config):
     return get_signature("checkin", datestr)
 
 
-# if __name__ == '__main__':
-#     from config import configs
-#     logging.basicConfig(level=logging.DEBUG)
-#     config = configs["xwytest"]
-#     logging.info(get_current_open_signature("Sat, 16 Sep 2017 06:17:49 GMT+00:00", config))
+if __name__ == '__main__':
+    from config import configs
+    logging.basicConfig(level=logging.DEBUG)
+    config = configs["xwytest"]
+    logging.info(get_current_open_signature("Sat, 16 Sep 2017 06:17:49 GMT+00:00", config))
