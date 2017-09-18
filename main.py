@@ -9,7 +9,6 @@ from datetime import datetime, timedelta
 
 from config import configs
 from tools import get_checkin_signature, get_current_open_signature
-from tools import timer
 
 
 
@@ -117,13 +116,10 @@ class Checkin:
         self._logger.info("开始监听签到")
         while True:
             sleep(randint(*self._config.INTERVAL))
-            if timer(1, (8*60+8, 9*60+50)):
-                checkin_id = self.get_checkin_id()
-                if checkin_id != -1:
-                    self.checkin(checkin_id)
-                    return
-            else:
-                self._logger.debug("未在监听时段")
+            checkin_id = self.get_checkin_id()
+            if checkin_id != -1:
+                self.checkin(checkin_id)
+                return
 
 
 

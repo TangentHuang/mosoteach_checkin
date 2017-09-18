@@ -2,4 +2,3 @@
 
 from .signature import *
 
-from .timer import *
